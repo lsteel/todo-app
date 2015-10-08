@@ -162,10 +162,44 @@ project. We're going to use the `--save-dev` flag to save these dependencies as
 devDependencies in our `package.json`.
 
 ```sh
-npm install --save-dev gulp gulp-sourcemaps gulp-uglify gulp-concat gulp-concat gulp-pleeease
+npm install --save-dev gulp gulp-sourcemaps gulp-uglify gulp-concat gulp-concat
 ```
 
 Now that we've got our dependencies, go ahead and create a `gulpfile.js` in your
 project directory.
 
-We will go over it in class and I will update this readme.
+This is what it should look like:
+
+```js
+'use strict';
+
+var gulp = require('gulp');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
+
+gulp.task('default', [
+  'scripts',
+  'styles',
+  'static',
+  'templates'
+]);
+
+gulp.task('scripts', function () {
+  return gulp.src('src/scripts/**/*.js')
+    .pipe(gulp.dest('build/js'));
+});
+
+gulp.task('styles', function () {
+  console.log('ran styles');
+});
+
+gulp.task('static', function () {
+  console.log('ran static');
+});
+
+gulp.task('templates', function () {
+  console.log('ran templates');
+});
+```
+
