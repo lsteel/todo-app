@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="TodoApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>asdf</title>
+    <title>Todo App | Lorin Steel</title>
 
     <!-- Includes all compiled css based bower components; i.e. bootstrap.css, main.css, etc. -->
     <link rel="stylesheet" href="css/app.min.css">
   </head>
   <body>
-    <h1></h1>
-    <!-- Includes all compiled javascript based bower components; i.e. bootstrap.js, main.js, etc. -->
+    <div class="container-fluid">
+      <h1>Todo App</h1>
+      <div ng-view></div>
+    </div>
+
+    <!-- Includes all compiled javascript based bower components; i.e. AngularJS, bootstrap.js, main.js, etc. -->
     <script src="js/app.min.js"></script>
   </body>
 </html>
