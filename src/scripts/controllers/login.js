@@ -15,7 +15,7 @@ angular
       if (isLoggedIn) {
         $location.url('/todos');
       }
-    })
+    });
 
     login.inputType = 'signin';
 
