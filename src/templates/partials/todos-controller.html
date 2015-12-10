@@ -1,3 +1,51 @@
 <div>
   <h1>Todos</h1>
+
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="todoItem in todo.todos | filter:todo.selectedFilter.value">
+      <input type="checkbox" ng-model="todoItem.completed" ng-change="todo.updateTodo(todoItem)"/>
+      <span ng-class="{ strikethrough: todoItem.completed }">{{ todoItem.name }}</span>
+      <button class="btn btn-xs btn-danger pull-right" ng-click="todo.archiveTodo(todoItem)">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </li>
+  </ul>
+
+  <form ng-submit="todo.createTodo(todo.create)">
+    <h3>Add Todo</h3>
+    <div class="alert alert-danger" ng-show="todo.errorMessage">
+      <p>{{ todo.errorMessage }}</p>
+    </div>
+    <!-- TODO name -->
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        name="name"
+        class="form-control"
+        type="text"
+        ng-model="todo.create.name"/>
+    </div>
+    <!-- TODO description -->
+    <!-- <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="form-control"
+        ng-model="todo.create.description"></textarea>
+    </div>
+    <!-- TODO tags
+    <div class="form-group">
+      <label for="tags">Tags</label>
+      <input
+        id="tags"
+        name="tags"
+        class="form-control"
+        type="text"
+        ng-model="todo.create.tags"/>
+      <p>Separate tags by comma</p>
+    </div> -->
+    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Add Todo" />
+  </form>
 </div>

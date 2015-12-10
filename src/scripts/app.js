@@ -2,6 +2,8 @@ angular
 .module('TodoApp', [
   'ngRoute',
   'LoginController',
+  'TodosController',
+  'logoutDirective',
 ])
 .config([
   '$routeProvider',

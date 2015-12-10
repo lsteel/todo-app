@@ -2,7 +2,7 @@ angular
 .module('LoginController', [
   'dgmTodo.auth',
   'dgmTodo.users',
-  'ToggleDirective',
+  'toggleDirective',
 ])
 .controller('LoginController', [
   'auth',
@@ -24,7 +24,6 @@ angular
 
       login[login.inputType](email, password)
         .then(function(res) {
-          // TODO redirect to the todos page
           $location.url('/todos');
         })
         .catch(function(res) {

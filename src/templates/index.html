@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="TodoApp">
+<html ng-app="TodoApp">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Todo App | Lorin Steel</title>
-
-    <!-- Includes all compiled css based bower components; i.e. bootstrap.css, main.css, etc. -->
-    <link rel="stylesheet" href="css/app.min.css">
+    <title>DGM Todo App</title>
+    <link href="/css/app.min.css" rel="stylesheet" />
   </head>
   <body>
     <!-- Floating navbar -->
@@ -16,15 +12,17 @@
         <div class="navbar-header">
           <span class="navbar-brand" href="#">Todo App</span>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li logout></li>
+        </ul>
       </div>
     </nav>
 
     <!-- Controller View Location -->
-    <div class="container-fluid">
+    <div class="container">
       <div ng-view></div>
     </div>
 
-    <!-- Includes all compiled javascript based bower components; i.e. AngularJS, bootstrap.js, main.js, etc. -->
-    <script src="js/app.min.js"></script>
+    <script src="/js/app.min.js"></script>
   </body>
 </html>
