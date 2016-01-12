@@ -5,7 +5,7 @@ make a front end app using modern web development build tools.
 
 # Prerequisites
 
-* [node](https://nodejs.org/en/)
+* [node](https://nodejs.org/en/) (you'll need version 4.x or above)
 * [npm](https://www.npmjs.com/) (should come with node)
 * [bower](http://bower.io/) (install with `npm install -g bower`)
 * [git](http://git-scm.com/)
@@ -162,10 +162,182 @@ project. We're going to use the `--save-dev` flag to save these dependencies as
 devDependencies in our `package.json`.
 
 ```sh
-npm install --save-dev gulp gulp-sourcemaps gulp-uglify gulp-concat gulp-concat gulp-pleeease
+npm install --save-dev gulp gulp-concat gulp-htmlmin gulp-livereload gulp-load-plugins gulp-pleeease gulp-plumber gulp-sourcemaps gulp-uglify bower-files eslint express
 ```
 
 Now that we've got our dependencies, go ahead and create a `gulpfile.js` in your
-project directory.
+project directory. We're not going to go super in depth as to everything that is
+happening here because we need to focus on building awesome apps. If you'd like
+to know more of the details about what's going here, contact me and I can go
+more in depth
 
-We will go over it in class and I will update this readme.
+This is what it should look like:
+
+```js
+'use strict';
+
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var express = require('express');
+var lib = require('bower-files')({
+  overrides: {
+    bootstrap: {
+      main: [
+        'dist/js/bootstrap.js',
+        'dist/css/bootstrap.css',
+        'dist/fonts/*'
+      ]
+    }
+  }
+});
+
+gulp.task('default', [
+  'fonts',
+  'scripts',
+  'styles',
+  'static',
+  'templates'
+]);
+
+gulp.task('watch', [
+  'fonts',
+  'scripts.watch',
+  'styles.watch',
+  'static.watch',
+  'templates.watch',
+  'server',
+  'livereload'
+]);
+
+
+gulp.task('scripts', function () {
+  return gulp.src(lib.ext('js').files.concat('src/scripts/**/*.js'))
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+      .pipe($.concat('app.min.js'))
+      .pipe($.uglify())
+    .pipe($.sourcemaps.write('../maps'))
+    .pipe(gulp.dest('build/js'));
+});
+gulp.task('scripts.watch', ['scripts'], function () {
+  gulp.watch('src/scripts/**/*.js', ['scripts']);
+});
+
+
+gulp.task('styles', function () {
+  return gulp.src(lib.ext('css').files.concat('src/styles/**/*.css'))
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+      .pipe($.concat('app.min.css'))
+      .pipe($.pleeease())
+    .pipe($.sourcemaps.write('../maps'))
+    .pipe(gulp.dest('build/css'));
+});
+gulp.task('styles.watch', ['styles'], function () {
+  gulp.watch('src/styles/**/*.css', ['styles']);
+});
+
+
+gulp.task('static', function () {
+  return gulp.src('src/static/**/*')
+    .pipe($.plumber())
+    .pipe(gulp.dest('build'));
+});
+gulp.task('static.watch', ['static'], function () {
+  gulp.watch('src/static/**/*', ['static']);
+});
+
+gulp.task('fonts', function () {
+  return gulp.src(lib.ext(['eot', 'svg', 'ttf', 'woff']).files)
+    .pipe($.plumber())
+    .pipe(gulp.dest('build/fonts'));
+});
+
+
+gulp.task('templates', function () {
+  return gulp.src('src/templates/**/*.html')
+    .pipe($.plumber())
+    .pipe($.htmlmin({
+      collapseWhitespace: true
+    }))
+    .pipe(gulp.dest('build'));
+});
+gulp.task('templates.watch', ['templates'], function () {
+  gulp.watch('src/templates/**/*.html', ['templates']);
+});
+
+
+gulp.task('server', function () {
+  var app = express();
+  app.use(express.static('build'));
+  app.listen(8000);
+});
+
+
+gulp.task('livereload', function () {
+  $.livereload.listen();
+  gulp.watch('build/**/*', function (event) {
+    $.livereload.changed(event);
+  });
+});
+```
+
+Now that we've got that going, we need to install some bower components
+to include in our project.
+
+```sh
+bower install --save angular angular-route bootstrap
+```
+
+That will install angular, angular-route, and bootstrap into our project.
+Our gulpfile will automatically build it into our production assets so we
+don't have to worry about those anymore.
+
+Next we can run `gulp watch` and see everything get built for us. The
+output should look something like this.
+
+```sh
+[08:22:02] Using gulpfile ~/Code/todo-app/gulpfile.js
+[08:22:02] Starting 'fonts'...
+[08:22:02] Starting 'scripts'...
+[08:22:02] Starting 'styles'...
+[08:22:02] Starting 'static'...
+[08:22:02] Starting 'templates'...
+[08:22:02] Starting 'server'...
+[08:22:02] Finished 'server' after 5.17 ms
+[08:22:02] Starting 'livereload'...
+[08:22:02] Finished 'livereload' after 107 ms
+[08:22:02] Finished 'static' after 174 ms
+[08:22:02] Starting 'static.watch'...
+[08:22:02] Finished 'static.watch' after 1.46 ms
+[08:22:03] Finished 'styles' after 1.14 s
+[08:22:03] Starting 'styles.watch'...
+[08:22:03] Finished 'styles.watch' after 827 μs
+[08:22:03] Finished 'templates' after 925 ms
+[08:22:03] Starting 'templates.watch'...
+[08:22:03] Finished 'templates.watch' after 1.45 ms
+[08:22:07] /Users/ksmith/Code/todo-app/build/index.html reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/css/app.min.css reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/fonts/glyphicons-halflings-regular.eot reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/fonts/glyphicons-halflings-regular.svg reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/fonts/glyphicons-halflings-regular.ttf reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/maps/app.min.css.map reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/partials/login-controller.html reloaded.
+[08:22:07] Finished 'fonts' after 4.98 s
+[08:22:07] Finished 'scripts' after 4.93 s
+[08:22:07] Starting 'scripts.watch'...
+[08:22:07] Finished 'scripts.watch' after 1.67 ms
+[08:22:07] Starting 'watch'...
+[08:22:07] Finished 'watch' after 7.44 μs
+[08:22:07] /Users/ksmith/Code/todo-app/build/fonts/glyphicons-halflings-regular.woff reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/js/app.min.js reloaded.
+[08:22:07] /Users/ksmith/Code/todo-app/build/maps/app.min.js.map reloaded.
+```
+
+If you got errors, then you need to make sure you've got all of your plugins
+installed, and that you're running node 4.x. To see if it was successful,
+you should see a `build/` folder in your project now.
+
+You may need to, on occasion, restart your build process. To do this, press
+`ctrl` + `c` to quit the process. Just type `gulp watch` to restart it
+again.
